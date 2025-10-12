@@ -1,0 +1,12 @@
+{% extends 'cars/base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+  <h2 class="mb-4">Choose Your Rental Car</h2>
+
+  <div class="d-flex justify-content-center gap-4">
+    <a href="{% url 'rentalcars_list' %}?seat=5" class="btn btn-primary btn-lg">5 Seater</a>
+    <a href="{% url 'rentalcars_list' %}?seat=7" class="btn btn-success btn-lg">7 Seater</a>
+    <a href="{% url 'rentalcars_list' %}" class="btn btn-secondary btn-lg">All Cars</a>
+  </div>
+</div>
+{% endblock %}

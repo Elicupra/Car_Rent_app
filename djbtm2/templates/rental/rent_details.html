@@ -1,0 +1,61 @@
+{% extends 'cars/base.html' %} {% load static %} {% block content %}
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">
+    Rent Details for {{ car.company }} {{ car.car_name }}
+  </h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-4">
+          <h4 class="mb-3 text-primary">Car Information</h4>
+          <ul class="list-group mb-4">
+            <li class="list-group-item">
+              <b>Total Km Driven:</b> {{ car.total_km_driven }}
+            </li>
+            <li class="list-group-item">
+              <b>Fuel Type:</b> {{ car.fuel_type|title }}
+            </li>
+            <li class="list-group-item">
+              <b>Amount per Km:</b> ₹{{ amount_per_km }}
+            </li>
+            <li class="list-group-item"><b>Total Km per Day:</b> 300</li>
+          </ul>
+
+          <h4 class="mb-3 text-success">Rental Form</h4>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ form.total_no_days.label_tag }} {{ form.total_no_days }}
+            </div>
+            <div class="mb-3">
+              {{ form.expected_km.label_tag }} {{ form.expected_km }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              Calculate
+            </button>
+          </form>
+
+          {% if total_amount %}
+          <div class="alert alert-info text-center mt-4">
+            <h5>Expected Rental Amount: <b>₹{{ total_amount }}</b></h5>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-center">
+        <a
+          href="{% url 'final_rent_details' car.id %}"
+          class="btn btn-primary btn-lg px-5 shadow-sm"
+        >
+          Check For Final Price
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

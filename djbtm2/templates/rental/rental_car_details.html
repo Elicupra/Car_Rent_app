@@ -1,0 +1,67 @@
+{% extends 'cars/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">
+    Details of {{ car.company }} {{ car.car_name }}
+  </h2>
+
+  <div class="row g-5 align-items-start">
+    <!-- Car Image -->
+    <div class="col-md-6 text-center">
+      {% if car.car_image %}
+      <img
+        src="{{ car.car_image.url }}"
+        class="img-fluid rounded shadow car-detail-img"
+        alt="{{ car.car_name }}"
+      />
+      {% else %}
+      <img
+        src="{% static 'images/no-image.jpg' %}"
+        class="img-fluid rounded shadow car-detail-img"
+        alt="No Image"
+      />
+      {% endif %}
+    </div>
+
+    <!-- Car Specifications -->
+    <div class="col-md-6">
+      <h4 class="mb-3">Specifications</h4>
+      <ul class="list-group mb-4 shadow-sm">
+        <li class="list-group-item"><b>Company:</b> {{ car.company }}</li>
+        <li class="list-group-item"><b>Model:</b> {{ car.car_name }}</li>
+        <li class="list-group-item"><b>Color:</b> {{ car.color }}</li>
+        <li class="list-group-item"><b>Fuel Type:</b> {{ car.fuel_type|title }}</li>
+        <li class="list-group-item"><b>Seat Capacity:</b> {{ car.seat_capacity }}</li>
+        <li class="list-group-item"><b>Miliege:</b> {{ car.miliege }}</li>
+        <li class="list-group-item"><b>Transmission:</b> {{ car.transmission_type|title }}</li>
+        <li class="list-group-item"><b>Total KM Driven:</b> {{ car.total_km_driven }} km</li>
+        <li class="list-group-item"><b>Bootspace:</b> {{ car.bootspace }} L</li>
+        <li class="list-group-item"><b>Rating:</b> ⭐ {{ car.rating }}</li>
+      </ul>
+
+      <!-- Button neatly aligned -->
+      <div class="text-center">
+        <a href="{% url 'rent_details' car.id %}" class="btn btn-primary btn-lg px-5 shadow-sm">
+          Checkout Rent Details
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Make image larger but keep aspect ratio */
+  .car-detail-img {
+    max-height: 450px;   /* Bigger image */
+    width: 100%;         /* Full column width */
+    object-fit: cover;   /* Crops & centers image */
+  }
+
+  /* Style the button */
+  .btn-primary {
+    border-radius: 12px;
+    font-size: 1.1rem;
+  }
+</style>
+{% endblock %}

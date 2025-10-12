@@ -1,0 +1,59 @@
+{% extends 'cars/base.html' %} {% load static %} {% block content %}
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">
+    Final Rent Details for {{ car.company }} {{ car.car_name }}
+  </h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-body p-4">
+          <h4 class="mb-3 text-primary">Car Information</h4>
+          <ul class="list-group mb-4">
+            <li class="list-group-item"><b>Km per Day:</b> 300 km</li>
+            <li class="list-group-item">
+              <b>Price per Km:</b> ₹{{ amount_per_km }}
+            </li>
+
+            <li class="list-group-item">
+              <b>Mileage:</b> {{ car.miliege }} km/l
+            </li>
+
+            <li class="list-group-item">
+              <b>First ODO Meter:</b> {{ car.total_km_driven }} km
+            </li>
+          </ul>
+
+          <h4 class="mb-3 text-success">Rental Calculation</h4>
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              {{ form.total_no_days.label_tag }} {{ form.total_no_days }}
+            </div>
+            <div class="mb-3">
+              {{ form.km_drive_now.label_tag }} {{ form.km_drive_now }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+              Calculate Final Price
+            </button>
+          </form>
+
+          {% if final_price %}
+          <div class="alert alert-info text-center mt-4">
+            <h5>Total Distance Travelled: <b>{{ travelled_km }} km</b></h5>
+            <h5>
+              Total Rental Before Fuel Adjustment: <b>₹{{ raw_total }}</b>
+            </h5>
+            <h5>Fuel Cost: <b>₹{{ fuel_cost }}</b></h5>
+            <h4>Final Price Payable: <b>₹{{ final_price }}</b></h4>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
