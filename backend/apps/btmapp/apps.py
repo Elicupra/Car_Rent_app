@@ -1,3 +1,5 @@
+"""Module for Register, autentication and perfile management app configuration."""
+
 from django.apps import AppConfig
 
 
