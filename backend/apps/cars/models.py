@@ -12,7 +12,14 @@ transmission_types = [
     ('manual', 'MANUAL'),
     ('automatic', 'AUTOMATIC')
 ]
-
+operation_types = [
+    ('sales', 'SALES'),
+    ('rental', 'RENTAL')
+    ('lease', 'LEASE'),
+    ('subscription', 'SUBSCRIPTION'),
+    ('all', 'ALL'),
+    ('other', 'OTHER')
+]
 
 class Car(models.Model):
     """Model representing a car."""
@@ -25,3 +32,4 @@ class Car(models.Model):
     seat_capacity = models.CharField(max_length=10, choices= no_of_seats)
     transmission_type = models.CharField(max_length=10, choices= transmission_types)
     total_km_driven = models.IntegerField(default=0)
+    operation_type = models.CharField(max_length=20, choices= operation_types, default='rental')
