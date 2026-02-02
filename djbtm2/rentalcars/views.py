@@ -4,6 +4,14 @@ from rentalcars.models import Carz
 from rentalcars.forms import RentDetailsForm, FinalRentDetailsForm
 from btmapp.utils import send_email_view
 
+#New imports for ViewSet
+from rest_framework import viewsets, status, filters
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from rentalcars.serializers import CarzSerializer, CarzListSerializer
+
 # Create your views here.
 
 
@@ -169,3 +177,30 @@ def final_rent_details(request, id=0):
             "travelled_km": travelled_km,
         },
     )
+
+# ViewSet for Carz
+class CarzViewSet(viewsets.ModelViewSet):
+    """API endpoint for list and update 'Carz' objects."""
+    queryset = Carz.objects.all()
+    serializer_class = CarzSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'fuel_type', 'seat_capacity', 'is_available']
+    search_fields = ['car_name', 'company']
+    ordering_fields = ['price_per_day', 'rating', 'created_at']
+    ordering = ['-created_at']
+    
+    def get_serializer_class(self):
+        """Usar serializer simplificado en listados"""
+        if self.action == 'list':
+            return CarzListSerializer
+        return CarzSerializer
+    
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
+    def toggle_availability(self, request, pk=None):
+        """Cambiar disponibilidad: POST /api/carz/{id}/toggle_availability/"""
+        car = self.get_object()
+        car.is_available = not car.is_available
+        car.save()
+        serializer = self.get_serializer(car)
+        return Response(serializer.data)

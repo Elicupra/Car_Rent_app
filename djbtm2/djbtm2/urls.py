@@ -19,10 +19,20 @@ from django.urls import path,include
 from btmapp import views
 from django.conf.urls.static import static
 from django.conf import settings
+from rest_framework.routers import DefaultRouter  # New
+# from rentalcars.views import CarzViewSet  # ← Add when needed
+
+# Create router for REST API
+router = DefaultRouter()
+# router.register(r'carz', CarzViewSet)  # ← Se agregará cuando creemos el ViewSet
+# Por ahora dejarlo vacío, se completa en el siguiente paso
+
 urlpatterns = [
     path("",include("rentalcars.urls")),
-     path("comp/",include("carsapp.urls")),
-     
+     path("comp/",include("carsapp.urls")),     
     path("",include("btmapp.urls")),
     path('admin/', admin.site.urls),
+       # API REST
+    path('api/', include(router.urls)),  # ← AGREGAR ESTO
+    path('api-auth/', include('rest_framework.urls')),  # ← AGREGAR ESTO (para el login de API)
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
