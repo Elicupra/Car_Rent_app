@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-from rentalcars.serializers import CarzSerializer, CarzListSerializer
+from rentalcars.seralizers import CarzSerializer, CarzListSerializer, CarzCreateUpdateSerializer, CarzDetailSerializer
 
 # Create your views here.
 
@@ -180,7 +180,18 @@ def final_rent_details(request, id=0):
 
 # ViewSet for Carz
 class CarzViewSet(viewsets.ModelViewSet):
-    """API endpoint for list and update 'Carz' objects."""
+    """
+    API ViewSet para gestionar autos de alquiler
+    
+    Endpoints:
+      GET  /api/carz/              - Listado paginado con filtros
+      GET  /api/carz/{id}/         - Detalle individual
+      POST /api/carz/              - Crear auto (admin)
+      PATCH /api/carz/{id}/        - Actualizar auto
+      DELETE /api/carz/{id}/       - Eliminar auto
+      POST /api/carz/{id}/toggle_availability/  - Cambiar disponibilidad
+    """
+        
     queryset = Carz.objects.all()
     serializer_class = CarzSerializer
     permission_classes = [IsAuthenticated]
@@ -190,17 +201,51 @@ class CarzViewSet(viewsets.ModelViewSet):
     ordering_fields = ['price_per_day', 'rating', 'created_at']
     ordering = ['-created_at']
     
+    
+
     def get_serializer_class(self):
         """Usar serializer simplificado en listados"""
         if self.action == 'list':
             return CarzListSerializer
+        elif self.action in ['create', 'update', 'partial_update']:
+            return CarzCreateUpdateSerializer
         return CarzSerializer
     
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def toggle_availability(self, request, pk=None):
-        """Cambiar disponibilidad: POST /api/carz/{id}/toggle_availability/"""
+        """
+        Acción custom: cambiar disponibilidad de un auto
+        
+        Endpoint: POST /api/carz/{id}/toggle_availability/
+        
+        Ejemplo:
+          curl -X POST http://localhost:8000/api/carz/5/toggle_availability/
+          
+        Response:
+          {
+            "id": 5,
+            "car_name": "Honda City",
+            "is_available": false,
+            ...
+          }
+        """
         car = self.get_object()
         car.is_available = not car.is_available
         car.save()
         serializer = self.get_serializer(car)
         return Response(serializer.data)
+    
+    def perform_create(self, serializer):
+        """
+        Hook que se ejecuta después de validar POST
+        Útil para agregar datos automáticos
+        """
+        # Ejemplo: registrar quién creó el auto
+        # serializer.save(created_by=self.request.user)
+        serializer.save()
+
+    def perform_update(self, serializer):
+        """
+        Hook que se ejecuta al actualizar
+        """
+        serializer.save()
