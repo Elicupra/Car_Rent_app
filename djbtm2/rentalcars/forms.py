@@ -48,7 +48,7 @@ class CarzForm(forms.ModelForm):
         return rating
     
     def toggle_availability(self, request, queryset):
-        count = queryset.update(is_available=~F('is_available'))
+        count = queryset.update(is_available=('is_available'))
         self.message_user(request, f"{count} autos actualizados")
     toggle_availability.short_description = "Toggle availability"
 
