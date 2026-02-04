@@ -3,14 +3,12 @@ from django.contrib.auth.decorators import login_required
 from rentalcars.models import Carz
 from rentalcars.forms import RentDetailsForm, FinalRentDetailsForm
 from btmapp.utils import send_email_view
-
-#New imports for ViewSet
 from rest_framework import viewsets, status, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-from rentalcars.seralizers import CarzSerializer, CarzListSerializer, CarzCreateUpdateSerializer, CarzDetailSerializer
+from rentalcars.serializers import CarzSerializer, CarzListSerializer, CarzCreateUpdateSerializer, CarzDetailSerializer
 
 # Create your views here.
 
@@ -249,3 +247,10 @@ class CarzViewSet(viewsets.ModelViewSet):
         Hook que se ejecuta al actualizar
         """
         serializer.save()
+
+# Agregar en seralizers.py:
+#class CarzSerializer(serializers.ModelSerializer):
+#    class Meta:
+#        model = Carz
+#        fields = '__all__'
+#        read_only_fields = ['id', 'created_at', 'updated_at']

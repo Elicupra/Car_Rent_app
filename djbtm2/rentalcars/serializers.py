@@ -70,3 +70,14 @@ class CarzCreateUpdateSerializer(serializers.ModelSerializer):
                 "El consumo de combustible debe ser positivo"
             )
         return value
+
+
+class CarzSerializer(serializers.ModelSerializer):
+    """
+    Serializer genérico completo para Carz
+    Se usa como fallback cuando no es list/create/update
+    """
+    class Meta:
+        model = Carz
+        fields = '__all__'
+        read_only_fields = ['id', 'created_at', 'updated_at']

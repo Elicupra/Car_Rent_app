@@ -40,7 +40,7 @@ class Carz(models.Model):
     transmission_type = models.CharField(max_length=20, choices=transmission)
     total_km_driven = models.PositiveIntegerField()  # total km driven
     bootspace = models.PositiveIntegerField(help_text="Bootspace in liters")
-    rating = models.DecimalField(max_digits=2, decimal_places=1, help_text="Rating out of 5.0")
+    rating = models.DecimalField(max_digits=3, decimal_places=1, help_text="Rating out of 5.0")
     car_image = models.ImageField(upload_to="rent_car_images/", blank=True, null=True)
     mileage =  models.PositiveIntegerField() # mileage in km/l or km/kWh. Review in db model
     price_per_day = models.PositiveIntegerField(default=0) #Review in db model
