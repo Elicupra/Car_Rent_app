@@ -8,7 +8,7 @@ class CarzAdmin(admin.ModelAdmin):
     # Columns visible in the admin list page
     list_display = [
         'car_name', 'company', 'category', 'fuel_type', 
-        'seat_capacity', 'price_per_day', 'is_available', 'rating'
+        'seat_capacity', 'price_per_day', 'is_available', 'rating', 'created_at'
     ]
 
     # Filters and search    
@@ -35,7 +35,43 @@ class CarzAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-        
+    
+    # ORDENAMIENTO: Orden por defecto en listado
+    ordering = ['-created_at']
+    
+    # PAGINACIÓN: Autos por página
+    list_per_page = 25
+
+    # ACCIONES: Bulk actions
+    actions = ['toggle_availability', 'set_price_1000', 'set_price_2000']
+    
+    def toggle_availability(self, request, queryset):
+        """Cambiar disponibilidad en bulk"""
+        # Invierte el valor: True→False, False→True
+        count = 0
+        for car in queryset:
+            car.is_available = not car.is_available
+            car.save()
+            count += 1
+        self.message_user(request, f"{count} autos actualizados")
+    
+    toggle_availability.short_description = "Cambiar disponibilidad"
+
+    def set_price_1000(self, request, queryset):
+        """Set precio a 1000"""
+        count = queryset.update(price_per_day=1000)
+        self.message_user(request, f"{count} autos con precio ₹1000")
+    
+    set_price_1000.short_description = "Establecer precio a ₹1000"
+
+    def set_price_2000(self, request, queryset):
+        """Set precio a 2000"""
+        count = queryset.update(price_per_day=2000)
+        self.message_user(request, f"{count} autos con precio ₹2000")
+    
+    set_price_2000.short_description = "Establecer precio a ₹2000"
+    
+
     def save_model(self, request, obj, form, change):
         """Save model with validations."""
         if obj.price_per_day <= 0:

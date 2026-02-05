@@ -38,7 +38,7 @@ class Carz(models.Model):
     fuel_type = models.CharField(max_length=100, choices=fuel)
     seat_capacity = models.CharField(max_length=10, choices=no_of_seats)
     transmission_type = models.CharField(max_length=20, choices=transmission)
-    total_km_driven = models.PositiveIntegerField()  # total km driven
+    total_km_driven = models.PositiveIntegerField(default=0)  # total km driven
     bootspace = models.PositiveIntegerField(help_text="Bootspace in liters")
     rating = models.DecimalField(max_digits=3, decimal_places=1, help_text="Rating out of 5.0")
     car_image = models.ImageField(upload_to="rent_car_images/", blank=True, null=True)
